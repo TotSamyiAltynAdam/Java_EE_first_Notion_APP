@@ -1,7 +1,7 @@
 package kz.bitlab.servlets.servlet;
 
+import kz.bitlab.servlets.db.Course;
 import kz.bitlab.servlets.db.DBConnection;
-import kz.bitlab.servlets.db.DBManager;
 import kz.bitlab.servlets.db.Task;
 
 import javax.servlet.ServletException;
@@ -16,9 +16,12 @@ import java.util.List;
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-//        List<Task> taskArrayList = DBManager.getAllTasks();
-        List<Task> taskArrayList = DBConnection.getTasks();
-        request.setAttribute("tasks", taskArrayList);
+        List<Task> tasks = DBConnection.getTasks();
+        request.setAttribute("tasks", tasks);
+
+        List<Course> courses = DBConnection.getCourses();
+        request.setAttribute("courses",courses);
+
         request.getRequestDispatcher("/task.jsp").forward(request,response);
     }
 }

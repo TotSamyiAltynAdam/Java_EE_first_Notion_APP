@@ -1,21 +1,21 @@
 package kz.bitlab.servlets.db;
 
 public class Task {
-    private Long id = 4L;
-    private String name;
+    private Long id;
+    private Course course;
     private String description;
     private String deadlineDate;
     private boolean done = false;
     public Task(){}
-    public Task(String name, String description, String deadlineDate,boolean done){
-        this.name = name;
+    public Task(Course course, String description, String deadlineDate,boolean done){
+        this.course = course;
         this.description = description;
         this.deadlineDate = deadlineDate;
         this.done = done;
     }
-    public Task(Long id,String name, String description, String deadlineDate,boolean done){
+    public Task(Long id, Course course, String description, String deadlineDate,boolean done){
         this.id = id;
-        this.name = name;
+        this.course = course;
         this.description = description;
         this.deadlineDate = deadlineDate;
         this.done = done;
@@ -37,12 +37,12 @@ public class Task {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public String getDeadlineDate() {

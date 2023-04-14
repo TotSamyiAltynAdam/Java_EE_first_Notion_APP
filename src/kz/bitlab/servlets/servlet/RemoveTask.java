@@ -1,7 +1,6 @@
 package kz.bitlab.servlets.servlet;
 
 import kz.bitlab.servlets.db.DBConnection;
-import kz.bitlab.servlets.db.DBManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

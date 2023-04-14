@@ -1,7 +1,7 @@
 package kz.bitlab.servlets.servlet;
 
+import kz.bitlab.servlets.db.Course;
 import kz.bitlab.servlets.db.DBConnection;
-import kz.bitlab.servlets.db.DBManager;
 import kz.bitlab.servlets.db.Task;
 
 import javax.servlet.ServletException;
@@ -15,18 +15,20 @@ import java.io.IOException;
 public class AddTask extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("task_name");
+        Long course_id = Long.parseLong(request.getParameter("task_name"));
         String description = request.getParameter("task_description");
         String deadline = request.getParameter("task_deadline");
-        Task task = new Task(
-                name,
-                description,
-                deadline,
-                false
-        );
+        Course course = DBConnection.getCourse(course_id);
+        if(course!=null) {
+            Task task = new Task(
+                    course,
+                    description,
+                    deadline,
+                    false
+            );
+            DBConnection.addTask(task);
+        }
 
-//        DBManager.addTask(task);
-        DBConnection.addTask(task);
         response.sendRedirect("/");
     }
 }

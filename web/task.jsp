@@ -50,14 +50,14 @@
                     <tbody>
                         <%
                             List<Task> taskList = (List<Task>) request.getAttribute("tasks");
-                            if(taskList !=null){
+                            if(taskList != null){
                                 for(Task task : taskList){
                                     String finish = "Нет";
                                     if(task.isDone()) finish = "Да";
                         %>
                                     <tr>
                                         <td><%=task.getId()%></td>
-                                        <td><%=task.getName()%></td>
+                                        <td><%=task.getCourse().getCourse_name()%></td>
                                         <td><%=task.getDeadlineDate()%></td>
                                         <td><%=finish%></td>
                                         <td>

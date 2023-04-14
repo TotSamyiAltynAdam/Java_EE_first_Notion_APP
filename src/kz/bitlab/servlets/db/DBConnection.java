@@ -1,5 +1,7 @@
 package kz.bitlab.servlets.db;
 
+import com.mysql.cj.protocol.Resultset;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,17 +21,40 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+    public static Course getCourse(Long id){
+        Course course = null;
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM courses WHERE course_id = ?");
+            statement.setLong(1,id);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                course = new Course();
+                course.setCourse_id(resultSet.getLong("course_id"));
+                course.setCourse_name(resultSet.getString("course_name"));
+            }
+            statement.close();
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return course;
+    }
     public static ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM tasks");
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT t.id, t.course_id, c.course_name, t.deadline, t.yes_no, t.description " +
+                    "FROM tasks AS t INNER JOIN courses AS c " +
+                    "ON t.course_id = c.course_id");
             ResultSet resultSet = statement.executeQuery();
-
             while (resultSet.next()) {
+                Course course = new Course();
+                course.setCourse_name(resultSet.getString("course_name"));
+                course.setCourse_id(resultSet.getLong("course_id"));
+
                 Task task = new Task();
                 task.setId(resultSet.getLong("id"));
-                task.setName(resultSet.getString("name"));
+                task.setCourse(course);
                 task.setDeadlineDate(resultSet.getString("deadline"));
                 task.setDone(resultSet.getBoolean("yes_no"));
                 task.setDescription(resultSet.getString("description"));
@@ -43,13 +68,14 @@ public class DBConnection {
         return tasks;
     }
 
+
     public static void addTask(Task task) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO tasks (name, deadline, yes_no, description) " +
+                    "INSERT INTO tasks (course_id, deadline, yes_no, description) " +
                             "VALUES (?, ?, ?, ?)"
             );
-            statement.setString(1, task.getName());
+            statement.setLong(1, task.getCourse().getCourse_id());
             statement.setString(2, task.getDeadlineDate());
             statement.setBoolean(3, task.isDone());
             statement.setString(4, task.getDescription());
@@ -66,14 +92,21 @@ public class DBConnection {
         Task task = null;
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM tasks WHERE id = ? LIMIT 1"
+                    "SELECT t.id, t.course_id, c.course_name, t.deadline, t.yes_no, t.description " +
+                            "FROM tasks AS t INNER JOIN courses AS c " +
+                            "ON t.course_id = c.course_id " +
+                            "WHERE t.id = ?"
             );
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                Course course = new Course();
+                course.setCourse_id(resultSet.getLong("course_id"));
+                course.setCourse_name(resultSet.getString("course_name"));
+
                 task = new Task();
                 task.setId(resultSet.getLong("id"));
-                task.setName(resultSet.getString("name"));
+                task.setCourse(course);
                 task.setDeadlineDate(resultSet.getString("deadline"));
                 task.setDone(resultSet.getBoolean("yes_no"));
                 task.setDescription(resultSet.getString("description"));
@@ -90,17 +123,17 @@ public class DBConnection {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE tasks " +
                             "SET " +
-                            "name = ?, " +
+                            "course_id = ?, " +
                             "deadline = ?, " +
-                            "yes_no = ?, " +
+                             "yes_no = ?, " +
                             "description = ? " +
                             "WHERE id = ?"
             );
-            statement.setString(1,task.getName());
-            statement.setString(2,task.getDeadlineDate());
-            statement.setBoolean(3,task.isDone());
-            statement.setString(4,task.getDescription());
-            statement.setLong(5,task.getId());
+            statement.setLong(1, task.getCourse().getCourse_id());
+            statement.setString(2, task.getDeadlineDate());
+            statement.setBoolean(3, task.isDone());
+            statement.setString(4, task.getDescription());
+            statement.setLong(5, task.getId());
             statement.executeUpdate();
 
             statement.close();
@@ -108,16 +141,36 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
-    public static void removeTask(Long id){
+
+    public static void removeTask(Long id) {
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM tasks WHERE id = ?"
-            );
-            statement.setLong(1,id);
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM tasks WHERE id = ?");
+            statement.setLong(1, id);
             statement.executeUpdate();
             statement.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static ArrayList<Course> getCourses() {
+        ArrayList<Course> courses = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM courses ORDER BY course_id ASC");
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                Course course = new Course();
+                course.setCourse_id(resultSet.getLong("course_id"));
+                course.setCourse_name(resultSet.getString("course_name"));
+                courses.add(course);
+            }
+            statement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return courses;
     }
 }

@@ -1,3 +1,5 @@
+<%@ page import="kz.bitlab.servlets.db.Course" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -8,7 +10,18 @@
     </div>
     <div class="row mt-2">
         <div class="col-12">
-            <input type="text" class="form-control" name="task_name" placeholder="Наименование...">
+            <select class="form-control" name="task_name">
+                <%
+                    ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
+                    if(courses!=null){
+                        for(Course course: courses){
+                %>
+                            <option value="<%=course.getCourse_id()%>"><%=course.getCourse_name()%></option>
+                <%
+                        }
+                    }
+                %>
+            </select>
         </div>
     </div>
     <div class="row mt-3">

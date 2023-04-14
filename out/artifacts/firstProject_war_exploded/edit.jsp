@@ -14,7 +14,19 @@
             </div>
             <div class="row mt-2">
                 <div class="col-12">
-                    <input type="text" class="form-control" name="task_name" value="<%=task.getName()%>">
+                    <select class="form-control" name="task_name">
+                        <%
+                            ArrayList<Course> courses = (ArrayList<Course>) request.getAttribute("courses");
+                            if(courses!=null){
+                                for(Course course: courses){
+                        %>
+                        <option <%=(course.getCourse_id().equals(task.getCourse().getCourse_id())?"selected":"")%>
+                                value="<%=course.getCourse_id()%>"><%=course.getCourse_name()%></option>
+                        <%
+                                }
+                            }
+                        %>
+                    </select>
                 </div>
             </div>
             <div class="row mt-3">
