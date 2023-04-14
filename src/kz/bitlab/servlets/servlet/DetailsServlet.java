@@ -1,5 +1,6 @@
 package kz.bitlab.servlets.servlet;
 
+import kz.bitlab.servlets.db.DBConnection;
 import kz.bitlab.servlets.db.DBManager;
 import kz.bitlab.servlets.db.Task;
 
@@ -19,7 +20,8 @@ public class DetailsServlet extends HttpServlet {
             id = Long.valueOf(request.getParameter("task_id"));
         } catch (Exception e){
         }
-        Task task = DBManager.getTask(id);
+//        Task task = DBManager.getTask(id);
+        Task task = DBConnection.getTask(id);
         request.setAttribute("foundTask",task);
         request.getRequestDispatcher("/details.jsp").forward(request,response);
     }

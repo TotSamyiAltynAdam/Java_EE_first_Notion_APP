@@ -1,5 +1,6 @@
 package kz.bitlab.servlets.servlet;
 
+import kz.bitlab.servlets.db.DBConnection;
 import kz.bitlab.servlets.db.DBManager;
 
 import javax.servlet.ServletException;
@@ -18,8 +19,8 @@ public class RemoveTask extends HttpServlet {
             id = Long.valueOf(request.getParameter("task_id"));
         }catch (Exception e){
         }
-        DBManager.removeTask(id);
-        System.out.println(id);
+//        DBManager.removeTask(id);
+        DBConnection.removeTask(id);
         response.sendRedirect("/");
     }
 }

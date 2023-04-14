@@ -1,5 +1,6 @@
 package kz.bitlab.servlets.servlet;
 
+import kz.bitlab.servlets.db.DBConnection;
 import kz.bitlab.servlets.db.DBManager;
 import kz.bitlab.servlets.db.Task;
 
@@ -24,7 +25,8 @@ public class AddTask extends HttpServlet {
                 false
         );
 
-        DBManager.addTask(task);
+//        DBManager.addTask(task);
+        DBConnection.addTask(task);
         response.sendRedirect("/");
     }
 }

@@ -1,5 +1,6 @@
 package kz.bitlab.servlets.servlet;
 
+import kz.bitlab.servlets.db.DBConnection;
 import kz.bitlab.servlets.db.DBManager;
 import kz.bitlab.servlets.db.Task;
 
@@ -22,13 +23,15 @@ public class EditTask extends HttpServlet {
         boolean finish = false;
         if(request.getParameter("task_done").equals("true")) finish=true;
 
-        Task task = DBManager.getTask(id);
+//        Task task = DBManager.getTask(id);
+        Task task = DBConnection.getTask(id);
         if(task!=null){
             task.setName(name);
             task.setDescription(description);
             task.setDeadlineDate(deadline);
             task.setDone(finish);
-            DBManager.updateTask(task);
+//            DBManager.updateTask(task);
+            DBConnection.updateTask(task);
             response.sendRedirect("/details?task_id="+id);
         }else{
             response.sendRedirect("/");
