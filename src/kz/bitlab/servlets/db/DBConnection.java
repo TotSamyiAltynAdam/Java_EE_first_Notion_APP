@@ -87,6 +87,21 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
+    public static void addCourse(Course course) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO courses (course_name) " +
+                            "VALUES (?)"
+            );
+            statement.setString(1, course.getCourse_name());
+
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static Task getTask(Long id) {
         Task task = null;

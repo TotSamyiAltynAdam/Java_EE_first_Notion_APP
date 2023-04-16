@@ -17,6 +17,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/sort-task-page">Все задания по типу</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/courses">Курсы</a>
+                        </li>
                     </ul>
                 </div>
             </div>
