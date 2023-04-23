@@ -1,4 +1,8 @@
+<%@ page import="kz.bitlab.servlets.db.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    User currentUser = (User) session.getAttribute("currentUser");
+%>
 <html>
 <head>
     <title>Title</title>
@@ -20,6 +24,29 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/courses">Курсы</a>
                         </li>
+                        <%
+                            if(currentUser!=null){
+                        %>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <%=currentUser.getFullName()%>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                                    <li><a class="dropdown-item" href="/">Settings</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        <%
+                            }else{
+                        %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Login</a>
+                            </li>
+                        <%
+                            }
+                        %>
                     </ul>
                 </div>
             </div>

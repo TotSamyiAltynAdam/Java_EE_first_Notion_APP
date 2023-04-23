@@ -102,7 +102,28 @@ public class DBConnection {
             e.printStackTrace();
         }
     }
-
+    public static User getUser(String email) {
+        User user = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM users " +
+                            "WHERE email = ?"
+            );
+            statement.setString(1,email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setEmail(resultSet.getString("email"));
+                user.setFullName(resultSet.getString("full_name"));
+                user.setPassword(resultSet.getString("password"));
+            }
+            statement.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
     public static Task getTask(Long id) {
         Task task = null;
         try {
