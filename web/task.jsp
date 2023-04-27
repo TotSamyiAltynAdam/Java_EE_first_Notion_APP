@@ -12,7 +12,7 @@
         <div class="row mt-3">
             <div class="col-12">
                 <%
-                    if(currentUser!=null){
+                    if(currentUser!=null && currentUser.getRole() == 1){
                 %>
                         <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addTask" style="background-color: darkblue">
                             + Добавить задание

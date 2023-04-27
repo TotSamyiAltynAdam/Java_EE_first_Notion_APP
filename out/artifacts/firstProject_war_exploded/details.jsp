@@ -58,7 +58,7 @@
                 </div>
 
                 <%
-                    if(currentUser!=null){
+                    if(currentUser!=null && currentUser.getRole() == 1){
                 %>
                         <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editTask">
                             Изменить
@@ -73,7 +73,7 @@
                             <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">Закрыть</button>
                         </a>
                 <%
-                    if(currentUser!=null) {
+                    if(currentUser!=null && currentUser.getRole() == 1) {
                 %>
                         <form action="/remove-task" method="post">
                             <input type="hidden" name="task_id" value="<%=task.getId()%>">

@@ -117,6 +117,7 @@ public class DBConnection {
                 user.setEmail(resultSet.getString("email"));
                 user.setFullName(resultSet.getString("full_name"));
                 user.setPassword(resultSet.getString("password"));
+                user.setRole(resultSet.getInt("role_id"));
             }
             statement.close();
         } catch (Exception e) {
@@ -124,6 +125,25 @@ public class DBConnection {
         }
         return user;
     }
+    public static void addUser(User user){
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+              "INSERT INTO users(email,password,full_name,role_id) " +
+                      "VALUES (?,?,?,?)"
+            );
+            statement.setString(1,user.getEmail());
+            statement.setString(2,user.getPassword());
+            statement.setString(3, user.getFullName());
+            statement.setInt(4,user.getRole());
+
+            statement.executeUpdate();
+            statement.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static Task getTask(Long id) {
         Task task = null;
         try {
@@ -300,6 +320,52 @@ public class DBConnection {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+    public static void addComment(Comment comment){
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+              "INSERT INTO comments (comment,user_id, news_id,post_date) " +
+                      "VALUES (?,?,?,NOW())"
+            );
+            statement.setString(1,comment.getComment());
+            statement.setLong(2,comment.getUser().getId());
+            statement.setLong(3,comment.getNews().getId());
+
+            statement.executeUpdate();
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static ArrayList<Comment> getComments(Long newsId){
+        ArrayList<Comment> comments = new ArrayList<>();
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+                "SELECT c.id, c.comment, c.post_date, c.news_id, c.user_id, u.full_name " +
+                        "FROM comments c " +
+                        "INNER JOIN users u ON c.user_id = u.id " +
+                        "WHERE c.news_id = ? " +
+                        "ORDER BY c.post_date DESC"
+            );
+            statement.setLong(1,newsId);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                User user = new User();
+                user.setId(resultSet.getLong("user_id"));
+                user.setFullName(resultSet.getString("full_name"));
+
+                Comment comment = new Comment();
+                comment.setId(resultSet.getLong("id"));
+                comment.setComment(resultSet.getString("comment"));
+                comment.setPostDate(resultSet.getTimestamp("post_date"));
+                comment.setUser(user);
+                comments.add(comment);
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return comments;
     }
 
 }
