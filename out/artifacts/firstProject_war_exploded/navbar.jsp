@@ -24,9 +24,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/courses">Курсы</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/news">All News</a>
+                        </li>
                         <%
                             if(currentUser!=null){
                         %>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/add-news-page">Add News</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <%=currentUser.getFullName()%>

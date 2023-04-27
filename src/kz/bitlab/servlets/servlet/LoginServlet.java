@@ -18,6 +18,14 @@ import java.util.List;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int error = 0;
+        try{
+            error = Integer.parseInt(request.getParameter("error"));
+        }catch (Exception e){
+        }
+        boolean errorFound = false;
+        if(error!=0) errorFound = true;
+        request.setAttribute("error",errorFound);
         request.getRequestDispatcher("/login.jsp").forward(request,response);
     }
 
@@ -31,7 +39,7 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("currentUser",user);
             response.sendRedirect("/profile");
         }else{
-            response.sendRedirect("/login?error");
+            response.sendRedirect("/login?error=1");
         }
     }
 }

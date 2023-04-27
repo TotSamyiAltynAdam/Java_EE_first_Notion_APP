@@ -209,4 +209,97 @@ public class DBConnection {
         }
         return courses;
     }
+    public static void addNews(News news){
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO news (title,content,post_date,user_id) " +
+                            "VALUES (?, ?, NOW(), ?)"
+            );
+            statement.setString(1,news.getTitle());
+            statement.setString(2, news.getContent());
+            statement.setLong(3,news.getUser().getId());
+
+            statement.executeUpdate();
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static ArrayList<News> getNews(){
+        ArrayList<News> newsArrayList = new ArrayList<>();
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+              "SELECT n.id, n.title, n.content, n.user_id, u.full_name, n.post_date " +
+                      "FROM news n " +
+                      "INNER JOIN users u ON u.id = n.user_id " +
+                      "ORDER BY n.post_date DESC"
+            );
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                News news = new News();
+                news.setId(resultSet.getLong("id"));
+                news.setTitle(resultSet.getString("title"));
+                news.setContent(resultSet.getString("content"));
+                news.setPostDate(resultSet.getTimestamp("post_date"));
+
+                User user = new User();
+                user.setId(resultSet.getLong("user_id"));
+                user.setFullName(resultSet.getString("full_name"));
+                news.setUser(user);
+
+                newsArrayList.add(news);
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return newsArrayList;
+    }
+    public static News getNewsByID(Long id){
+        News news = null;
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT n.id, n.title, n.content, n.user_id, u.full_name, n.post_date " +
+                            "FROM news n " +
+                            "INNER JOIN users u ON u.id = n.user_id " +
+                            "WHERE n.id = ?"
+            );
+            statement.setLong(1,id);
+
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                news = new News();
+                news.setId(resultSet.getLong("id"));
+                news.setTitle(resultSet.getString("title"));
+                news.setContent(resultSet.getString("content"));
+                news.setPostDate(resultSet.getTimestamp("post_date"));
+
+                User user = new User();
+                user.setId(resultSet.getLong("user_id"));
+                user.setFullName(resultSet.getString("full_name"));
+                news.setUser(user);
+            }
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return news;
+    }
+    public static void updateNews(News news){
+        try{
+            PreparedStatement statement = connection.prepareStatement(
+              "UPDATE news SET title = ?, content = ? " +
+                      "WHERE id = ?"
+            );
+            statement.setString(1,news.getTitle());
+            statement.setString(2,news.getContent());
+            statement.setLong(3,news.getId());
+
+            statement.executeUpdate();
+            statement.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -8,6 +8,16 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-6 mx-auto">
+        <%
+          boolean error = (boolean) request.getAttribute("error");
+          if(error){
+        %>
+        <div class="alert alert-danger mt-4" role="alert">
+          Incorrect <b>email</b> and <b>password!</b>
+        </div>
+        <%
+          }
+        %>
         <form action="/login" method="post">
           <div class="row">
             <div class="col-12">
