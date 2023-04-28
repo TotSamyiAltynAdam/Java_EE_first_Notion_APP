@@ -16,7 +16,13 @@ import java.util.List;
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        List<Task> tasks = DBConnection.getTasks();
+        String key = request.getParameter("key");
+        List<Task> tasks;
+        if(key!=null){
+            tasks = DBConnection.searchTasks("%"+key+"%");
+        }else{
+            tasks = DBConnection.getTasks();
+        }
         request.setAttribute("tasks", tasks);
 
         List<Course> courses = DBConnection.getCourses();

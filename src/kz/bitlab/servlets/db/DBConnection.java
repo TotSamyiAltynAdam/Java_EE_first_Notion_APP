@@ -68,6 +68,36 @@ public class DBConnection {
         return tasks;
     }
 
+    public static ArrayList<Task> searchTasks(String key) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT t.id, t.course_id, c.course_name, t.deadline, t.yes_no, t.description " +
+                            "FROM tasks AS t " +
+                            "INNER JOIN courses AS c ON t.course_id = c.course_id " +
+                            "WHERE LOWER(c.course_name) LIKE LOWER(?)");
+            statement.setString(1,key);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Course course = new Course();
+                course.setCourse_name(resultSet.getString("course_name"));
+                course.setCourse_id(resultSet.getLong("course_id"));
+
+                Task task = new Task();
+                task.setId(resultSet.getLong("id"));
+                task.setCourse(course);
+                task.setDeadlineDate(resultSet.getString("deadline"));
+                task.setDone(resultSet.getBoolean("yes_no"));
+                task.setDescription(resultSet.getString("description"));
+                tasks.add(task);
+            }
+            statement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
 
     public static void addTask(Task task) {
         try {
