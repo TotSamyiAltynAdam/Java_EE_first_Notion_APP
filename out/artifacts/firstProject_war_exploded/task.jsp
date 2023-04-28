@@ -41,6 +41,22 @@
                 %>
             </div>
         </div>
+
+        <form action="/" method="get">
+            <div class="row mt-3">
+                <div class="col-10">
+                    <%
+                        String key = request.getParameter("key");
+                        if(key==null) key = "";
+                    %>
+                    <input type="text" class="form-control" name="key" placeholder="search" value="<%=key%>">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-success w-100">SEARCH</button>
+                </div>
+            </div>
+        </form>
+
         <div class="row mt-3">
             <div class="col-12">
                 <table class="table table-striped table-hover">
